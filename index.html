@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hoyt</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body {
+      min-height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      color: #111;
+    }
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      background: #f7f6f4;
+    }
+
+    /* Discreet living gradient — soft mesh, slow drift */
+    .ambient {
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      pointer-events: none;
+      background: linear-gradient(165deg, #faf9f7 0%, #f5f3f0 45%, #f8f7fb 100%);
+    }
+    .ambient__blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(72px);
+      opacity: 0.55;
+      will-change: transform;
+    }
+    .ambient__blob--a {
+      width: min(72vw, 520px);
+      height: min(72vw, 520px);
+      top: -12%;
+      left: -8%;
+      background: radial-gradient(circle at 35% 35%, rgba(186, 198, 235, 0.42), rgba(186, 198, 235, 0) 68%);
+      animation: drift-a 28s ease-in-out infinite;
+    }
+    .ambient__blob--b {
+      width: min(65vw, 480px);
+      height: min(65vw, 480px);
+      bottom: -10%;
+      right: -12%;
+      background: radial-gradient(circle at 60% 45%, rgba(225, 210, 195, 0.38), rgba(225, 210, 195, 0) 65%);
+      animation: drift-b 32s ease-in-out infinite;
+    }
+    .ambient__blob--c {
+      width: min(55vw, 400px);
+      height: min(55vw, 400px);
+      left: 50%;
+      top: 42%;
+      background: radial-gradient(circle at 50% 50%, rgba(200, 228, 220, 0.28), rgba(200, 228, 220, 0) 70%);
+      transform: translate(-50%, -50%);
+      animation: drift-c 24s ease-in-out infinite;
+    }
+    .ambient__sheen {
+      position: absolute;
+      inset: -50%;
+      background:
+        linear-gradient(
+          125deg,
+          transparent 0%,
+          rgba(255, 255, 255, 0.12) 42%,
+          rgba(255, 255, 255, 0.22) 50%,
+          rgba(255, 255, 255, 0.1) 58%,
+          transparent 100%
+        );
+      background-size: 200% 200%;
+      animation: sheen 45s linear infinite;
+      opacity: 0.85;
+    }
+
+    @keyframes drift-a {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(8%, 12%) scale(1.06); }
+      66% { transform: translate(4%, -6%) scale(0.98); }
+    }
+    @keyframes drift-b {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      40% { transform: translate(-10%, -8%) scale(1.05); }
+      75% { transform: translate(-4%, 6%) scale(0.97); }
+    }
+    @keyframes drift-c {
+      0%, 100% { transform: translate(-50%, -50%) translate(0, 0) scale(1); }
+      50% { transform: translate(-50%, -50%) translate(14px, -22px) scale(1.08); }
+    }
+    @keyframes sheen {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .ambient__blob,
+      .ambient__sheen {
+        animation: none;
+      }
+    }
+
+    .shell {
+      position: relative;
+      z-index: 1;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    .hero {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .hero img {
+      max-width: min(90vw, 400px);
+      height: auto;
+      filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.04));
+    }
+    .landing {
+      padding: 3rem 2rem 4rem;
+      text-align: center;
+    }
+    .tagline {
+      font-size: 1.125rem;
+      color: #4a4a4a;
+      max-width: 480px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+    .links {
+      display: flex;
+      gap: 2rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .links a {
+      color: #111;
+      text-decoration: none;
+      font-size: 0.9rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding-bottom: 2px;
+      border-bottom: 1.5px solid rgba(0, 0, 0, 0.18);
+      transition: border-color 0.2s;
+    }
+    .links a:hover {
+      border-color: #111;
+    }
+    .colophon {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #888;
+      letter-spacing: 0.02em;
+      padding: 0 1.5rem 2.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient" aria-hidden="true">
+    <div class="ambient__blob ambient__blob--a"></div>
+    <div class="ambient__blob ambient__blob--b"></div>
+    <div class="ambient__blob ambient__blob--c"></div>
+    <div class="ambient__sheen"></div>
+  </div>
+
+  <div class="shell">
+    <div class="hero">
+      <img src="hoyt.svg" alt="Hoyt" width="298" height="127" />
+    </div>
+
+    <footer class="landing">
+      <p class="tagline">Fluent in machine. Conversationally ambiguous to humans.</p>
+    </footer>
+
+    <div class="colophon">Hoyt &mdash; somewhere between the stack trace and the stars.</div>
+  </div>
+</body>
+</html>
