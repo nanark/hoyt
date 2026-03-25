@@ -6,6 +6,7 @@
   <title>Hoyt</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="favicon.png" type="image/png" />
+  <noscript><style>.load-veil{display:none!important}</style></noscript>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     html, body {
@@ -22,15 +23,31 @@
     }
     html {
       min-height: 100%;
-      background: #2a2018;
+      background: #000;
     }
 
-    .cover-bg {
+    .cover-stack {
       position: fixed;
       inset: 0;
       z-index: 0;
       pointer-events: none;
-      background: url("arrival_2000.jpeg") center / cover no-repeat;
+    }
+    .cover-bg {
+      position: absolute;
+      inset: 0;
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+    }
+    .cover-bg--preview {
+      background-image: url("arrival_small.jpeg");
+    }
+    .cover-bg--full {
+      opacity: 0;
+      transition: opacity 1.15s ease;
+    }
+    .cover-bg--full.is-visible {
+      opacity: 1;
     }
 
     .shell {
@@ -73,10 +90,33 @@
         padding: 1rem 1.5rem max(1.75rem, env(safe-area-inset-bottom));
       }
     }
+
+    .load-veil {
+      position: fixed;
+      inset: 0;
+      z-index: 100;
+      background: #000;
+      opacity: 1;
+      transition: opacity 0.75s ease;
+      pointer-events: auto;
+    }
+    .load-veil.is-done {
+      opacity: 0;
+      pointer-events: none;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .load-veil,
+      .cover-bg--full {
+        transition-duration: 0.01ms;
+      }
+    }
   </style>
 </head>
 <body>
-  <div class="cover-bg" aria-hidden="true"></div>
+  <div class="cover-stack" aria-hidden="true">
+    <div class="cover-bg cover-bg--preview"></div>
+    <div class="cover-bg cover-bg--full"></div>
+  </div>
 
   <div class="shell">
     <div class="hero">
@@ -84,5 +124,39 @@
       <p class="tagline">Fluent in machine. Conversationally ambiguous to humans.</p>
     </div>
   </div>
+
+  <div class="load-veil" aria-hidden="true"></div>
+  <script>
+    (function () {
+      var veil = document.querySelector(".load-veil");
+      var fullEl = document.querySelector(".cover-bg--full");
+      var small = new Image();
+      var big = new Image();
+
+      function revealVeil() {
+        veil.classList.add("is-done");
+        veil.addEventListener(
+          "transitionend",
+          function onVeilEnd(e) {
+            if (e.propertyName !== "opacity") return;
+            veil.style.visibility = "hidden";
+          },
+          { once: true }
+        );
+        big.onload = function () {
+          fullEl.style.backgroundImage = 'url("arrival_big.jpeg")';
+          requestAnimationFrame(function () {
+            fullEl.classList.add("is-visible");
+          });
+        };
+        big.onerror = function () {};
+        big.src = "arrival_big.jpeg";
+      }
+
+      small.onload = revealVeil;
+      small.onerror = revealVeil;
+      small.src = "arrival_small.jpeg";
+    })();
+  </script>
 </body>
 </html>
