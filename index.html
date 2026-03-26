@@ -284,6 +284,20 @@
         transition-duration: 0.01ms;
       }
     }
+
+    .site-footer-copy {
+      position: fixed;
+      right: max(1rem, env(safe-area-inset-right));
+      bottom: max(1rem, env(safe-area-inset-bottom));
+      z-index: 5;
+      margin: 0;
+      font-size: 0.7rem;
+      font-weight: 400;
+      letter-spacing: 0.03em;
+      color: rgba(255, 255, 255, 0.62);
+      text-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
@@ -338,9 +352,14 @@
     </section>
   </div>
 
+  <p class="site-footer-copy">© <span id="copyright-year"></span></p>
+
   <div class="load-veil" aria-hidden="true"></div>
   <script>
     (function () {
+      var y = document.getElementById("copyright-year");
+      if (y) y.textContent = String(new Date().getFullYear());
+
       var veil = document.querySelector(".load-veil");
       var fullEl = document.querySelector(".cover-bg--full");
       var small = new Image();
