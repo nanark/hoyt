@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Hoyt</title>
-  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <link rel="icon" href="favicon.png" type="image/png" />
+  <link rel="icon" href="media/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="media/favicon.png" type="image/png" />
   <noscript><style>.load-veil{display:none!important}</style></noscript>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -16,14 +16,16 @@
     }
     body {
       min-height: 100vh;
-      display: flex;
-      flex-direction: column;
       position: relative;
       background: transparent;
     }
     html {
       min-height: 100%;
       background: #000;
+      scroll-behavior: smooth;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
     }
 
     .cover-stack {
@@ -40,7 +42,7 @@
       background-repeat: no-repeat;
     }
     .cover-bg--preview {
-      background-image: url("arrival_small.jpeg");
+      background-image: url("media/arrival_small.jpeg");
     }
     .cover-bg--full {
       opacity: 0;
@@ -54,40 +56,211 @@
       position: relative;
       z-index: 1;
       background: transparent;
-      flex: 1;
+    }
+
+    .panel {
+      min-height: 100vh;
+      min-height: 100dvh;
+    }
+
+    .panel--hero {
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
       align-items: flex-start;
-      min-height: 100vh;
     }
     .hero {
+      width: 100%;
+      padding: 1.5rem 1.5rem max(1.75rem, env(safe-area-inset-bottom));
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      font: inherit;
+      color: inherit;
+      text-align: left;
+      display: block;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .hero:focus {
+      outline: none;
+    }
+    .hero:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.85);
+      outline-offset: 4px;
+    }
+    .content-col {
+      width: 80%;
+      max-width: 300px;
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      padding: 1.5rem 1.5rem max(1.75rem, env(safe-area-inset-bottom));
       gap: 0.75rem;
     }
     .hero img {
-      max-width: min(38vw, 160px);
+      max-width: min(100%, min(38vw, 160px));
       height: auto;
       display: block;
       filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.28));
+      pointer-events: none;
     }
     .tagline {
       font-size: clamp(1.05rem, 3.4vw, 1.5rem);
       font-weight: 400;
       color: #fff;
-      width: 80%;
-      max-width: 300px;
+      width: 100%;
       margin: 0;
       line-height: 1.3em;
       text-align: left;
       filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.28));
+      pointer-events: none;
+    }
+
+    .scroll-arrow-wrap {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem 0;
+      color: rgba(255, 255, 255, 0.92);
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+      pointer-events: none;
+    }
+    @keyframes arrow-bounce-down {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(6px); }
+    }
+    @keyframes arrow-bounce-up {
+      0%, 100% { transform: rotate(180deg) translateY(0); }
+      50% { transform: rotate(180deg) translateY(-6px); }
+    }
+    .scroll-arrow-icon {
+      display: block;
+      width: 2rem;
+      height: 2rem;
+    }
+    .scroll-arrow-wrap .scroll-arrow-icon {
+      animation: arrow-bounce-down 1.35s ease-in-out infinite;
+    }
+    .scroll-arrow-icon--up {
+      animation: arrow-bounce-up 1.35s ease-in-out infinite;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .scroll-arrow-wrap .scroll-arrow-icon,
+      .scroll-arrow-icon--up {
+        animation: none;
+      }
+      .scroll-arrow-icon--up {
+        transform: rotate(180deg);
+      }
+    }
+
+    .profile-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      width: 100%;
+      text-align: center;
+      padding: 1.5rem 1.35rem;
+      border-radius: 1rem;
+      background: rgba(0, 0, 0, 0.22);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    .profile-avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+    }
+    .profile-name {
+      font-size: 1.35rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: 0.02em;
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+    .profile-links {
+      list-style: none;
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      width: 100%;
+    }
+    .profile-links a {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: rgba(255, 255, 255, 0.92);
+      text-decoration: none;
+      padding: 0.45rem;
+      border-radius: 0.5rem;
+      transition: color 0.2s ease, opacity 0.2s ease, background 0.2s ease;
+    }
+    .profile-links a:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .profile-links a:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.85);
+      outline-offset: 2px;
+      border-radius: 0.5rem;
+    }
+    .profile-link-icon {
+      display: block;
+      width: 1.75rem;
+      height: 1.75rem;
+      fill: currentColor;
+    }
+
+    .panel--profile {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem 1.5rem max(1.75rem, env(safe-area-inset-bottom));
+    }
+    .profile-panel-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      width: 80%;
+      max-width: 300px;
+    }
+    .scroll-up {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      padding: 0.5rem 0;
+      border: none;
+      background: transparent;
+      color: rgba(255, 255, 255, 0.92);
+      cursor: pointer;
+      border-radius: 999px;
+      filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.35));
+      -webkit-tap-highlight-color: transparent;
+      align-self: stretch;
+    }
+    .scroll-up:focus-visible {
+      outline: 2px solid rgba(255, 255, 255, 0.85);
+      outline-offset: 4px;
     }
 
     @media (max-width: 768px) {
+      .content-col,
+      .profile-panel-inner {
+        width: 100%;
+        max-width: none;
+      }
       .hero {
+        padding: 1rem 1.5rem max(1.75rem, env(safe-area-inset-bottom));
+      }
+      .panel--profile {
         padding: 1rem 1.5rem max(1.75rem, env(safe-area-inset-bottom));
       }
     }
@@ -120,10 +293,49 @@
   </div>
 
   <div class="shell">
-    <div class="hero">
-      <img src="hoyt.svg" alt="Hoyt" width="298" height="127" />
-      <p class="tagline">Fluent in machine. Conversationally ambiguous to humans.</p>
+    <div class="panel panel--hero" id="hero">
+      <div class="hero" role="button" tabindex="0" aria-label="Scroll to Kevin Kuipers profile">
+        <div class="content-col">
+          <img src="media/hoyt.svg" alt="Hoyt" width="298" height="127" />
+          <p class="tagline">Fluent in machine. Conversationally ambiguous to humans.</p>
+          <span class="scroll-arrow-wrap" aria-hidden="true">
+            <svg class="scroll-arrow-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+        </div>
+      </div>
     </div>
+
+    <section id="profile" class="panel panel--profile" tabindex="-1" aria-label="Kevin Kuipers">
+      <div class="content-col profile-panel-inner">
+        <button type="button" class="scroll-up" aria-label="Back to intro">
+          <svg class="scroll-arrow-icon scroll-arrow-icon--up" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+        <div class="profile-card">
+          <img class="profile-avatar" src="media/kevin-kuipers.jpg" alt="Kevin Kuipers" width="240" height="240" />
+          <h2 class="profile-name">Kevin Kuipers</h2>
+          <ul class="profile-links">
+            <li>
+              <a href="https://www.linkedin.com/in/kevinkuipers" rel="noopener noreferrer" aria-label="Kevin Kuipers on LinkedIn">
+                <svg class="profile-link-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                </svg>
+              </a>
+            </li>
+            <li>
+              <a href="https://x.com/nanark_" rel="noopener noreferrer" aria-label="Kevin Kuipers on X">
+                <svg class="profile-link-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
   </div>
 
   <div class="load-veil" aria-hidden="true"></div>
@@ -145,18 +357,53 @@
           { once: true }
         );
         big.onload = function () {
-          fullEl.style.backgroundImage = 'url("arrival_big.jpeg")';
+          fullEl.style.backgroundImage = 'url("media/arrival_big.jpeg")';
           requestAnimationFrame(function () {
             fullEl.classList.add("is-visible");
           });
         };
         big.onerror = function () {};
-        big.src = "arrival_big.jpeg";
+        big.src = "media/arrival_big.jpeg";
       }
 
       small.onload = revealVeil;
       small.onerror = revealVeil;
-      small.src = "arrival_small.jpeg";
+      small.src = "media/arrival_small.jpeg";
+
+      var heroEl = document.querySelector(".hero");
+      var profileEl = document.getElementById("profile");
+      var scrollUpBtn = document.querySelector(".scroll-up");
+      var heroPanel = document.getElementById("hero");
+      var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+      function scrollToProfile() {
+        if (!profileEl) return;
+        profileEl.scrollIntoView({
+          behavior: reduceMotion.matches ? "auto" : "smooth",
+          block: "start"
+        });
+        profileEl.focus({ preventScroll: true });
+      }
+
+      function scrollToHero() {
+        if (!heroPanel) return;
+        heroPanel.scrollIntoView({
+          behavior: reduceMotion.matches ? "auto" : "smooth",
+          block: "start"
+        });
+      }
+
+      if (heroEl && profileEl) {
+        heroEl.addEventListener("click", scrollToProfile);
+        heroEl.addEventListener("keydown", function (e) {
+          if (e.key !== "Enter" && e.key !== " ") return;
+          e.preventDefault();
+          scrollToProfile();
+        });
+      }
+      if (scrollUpBtn && heroPanel) {
+        scrollUpBtn.addEventListener("click", scrollToHero);
+      }
     })();
   </script>
 </body>
